@@ -4,6 +4,7 @@ A simple React application that allows you to add items to a list, copy them by 
 
 ## Features
 
+- Create new lists
 - Add items to a list
 - Copy items by clicking on them
 - Delete items with a single click
