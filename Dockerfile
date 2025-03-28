@@ -1,5 +1,5 @@
-# Use the official Node.js image as the base image
-FROM node:20
+# Build stage
+FROM node:20 AS build
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -8,16 +8,25 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Make the start script executable
-RUN chmod +x start.sh
+# Build the application
+RUN npm run build
 
-# Expose the port the app runs on
-EXPOSE 5173
+# Production stage
+FROM nginx:alpine
 
-# Start the application using the shell script
-CMD ["./start.sh"]
+# Copy the built assets from the build stage
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

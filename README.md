@@ -36,7 +36,5 @@ npm run dev
 docker build -t item-list-app .
 
 # Run the container
-docker run -p 5173:5173 -v ${PWD}:/app item-list-app
+docker run -p 80:80 item-list-app
 ```
-
-The application will be available at `http://localhost:5173`. 
